@@ -33,6 +33,7 @@ public class MyRenderer implements GLSurfaceView.Renderer
     public void onSurfaceCreated(GL10 gl, javax.microedition.khronos.egl.EGLConfig config)
     {
         gl.glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+        vertexBuff = mLine.getVertexes();
     }
 
     public MyRenderer(Context context)
@@ -74,6 +75,7 @@ public class MyRenderer implements GLSurfaceView.Renderer
     public void onSurfaceChanged(GL10 gl, int width, int height)
     {
         gl.glViewport(0, 0, width, height);
+        vertexBuff = mLine.getVertexes();
     }
 
     public void inputButtonTapped(float x, float y, float z)
@@ -106,11 +108,15 @@ public class MyRenderer implements GLSurfaceView.Renderer
     public void DrawTo(int it)
     {
         ArrayList<Float> iVertex = new ArrayList<Float>();
-        for(int i = 0; i < it; i++)
-        {
-            iVertex.add(vertexBuff.get(i));
+        try {
+            for (int i = 0; i < it; i++) {
+                iVertex.add(vertexBuff.get(i));
+            }
         }
-
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
         mLine.setVertexes(iVertex);
     }
 

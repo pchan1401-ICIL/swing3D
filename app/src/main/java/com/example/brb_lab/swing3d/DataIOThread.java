@@ -9,35 +9,15 @@ import android.widget.SeekBar;
 
 public class DataIOThread extends Thread
 {
-    private MyRenderer mRenderer;
-    private int mshowRange;
-    private SeekBar seekBar1;
-    private MyGLSurfaceView mGLView;
-
-    DataIOThread(MyRenderer renderer, int showRange, SeekBar seekBar,MyGLSurfaceView GLView)
+    String mFileName;
+    public DataIOThread(String fileName)
     {
-        mRenderer = renderer;
-        mshowRange = showRange;
-        seekBar1 = seekBar;
-        mGLView = GLView;
+        mFileName = fileName;
     }
 
-    public void readFile()
+    protected String readSwing()
     {
-        String fileName = "/sdcard/3Dswing/test.txt";
-        String data = readSwing(fileName);
-
-        mRenderer.readButtonTapped(data);
-        mshowRange = mRenderer.getLineLength();
-        seekBar1.setMax((mshowRange - 1)/3 );
-        seekBar1.setProgress((mshowRange - 1)/3);
-        mGLView.requestRender();
-    }
-
-
-    protected String readSwing(String fileName)
-    {
-        File file = new File(fileName);
+        File file = new File(mFileName);
         String outPut = null;
         try
         {

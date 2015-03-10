@@ -13,11 +13,14 @@ import android.widget.SeekBar;
 public class ChanMain extends Activity
 {
     private int showRange;
-    private MyGLSurfaceView mGLView;
+    private int isDataRead = 1;
+    static int FROM_DATA_READ = 1;
+    static int NOT_FROM_DATA_READ = 0;
     private MyRenderer mRenderer;
+    private MyGLSurfaceView mGLView;
     private int findRng = 0;
     Handler mHandler = new Handler();
-    DataHandler swingSave = new DataHandler();
+
 
     RadioButton radioButton1;
     RadioButton radioButton2;
@@ -29,12 +32,12 @@ public class ChanMain extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chan);
 
-        frameLayout1 = (FrameLayout) findViewById(R.id.FrameLayout1);
-
-        mRenderer = new MyRenderer(this);
         mGLView = new MyGLSurfaceView(this);
+        mRenderer = new MyRenderer(this);
+        frameLayout1 = (FrameLayout) findViewById(R.id.FrameLayout1);
         mGLView.setRenderer(mRenderer);
-        mGLView.setRenderMode(mGLView.RENDERMODE_WHEN_DIRTY);
+        mGLView.setRenderMode(MyGLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        mGLView.setPreserveEGLContextOnPause(true);
         frameLayout1.addView(mGLView);
 
         radioButton1 = (RadioButton)findViewById(R.id.radioButton1);
@@ -48,7 +51,7 @@ public class ChanMain extends Activity
             {
                 if(radioButton1.isChecked())
                 {
-                    mGLView.setMoveMode(mGLView.ROTATE_BUTTON);
+                    mGLView.setMoveMode(MyGLSurfaceView.ROTATE_BUTTON);
                 }
             }
         });
@@ -60,7 +63,7 @@ public class ChanMain extends Activity
             {
                 if(radioButton2.isChecked())
                 {
-                    mGLView.setMoveMode(mGLView.MOVE_BUTTON);
+                    mGLView.setMoveMode(MyGLSurfaceView.MOVE_BUTTON);
                 }
             }
         });
@@ -71,8 +74,9 @@ public class ChanMain extends Activity
             @Override
             public void onClick(View v)
             {
+                isDataRead = FROM_DATA_READ;
                 Intent mFileListView = new Intent(getApplicationContext(),FileListViewActivity.class);
-                startActivity(mFileListView);
+                startActivityForResult(mFileListView, 1);
             }
         });
 
@@ -112,15 +116,8 @@ public class ChanMain extends Activity
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
             {
                 showRange=(seekBar1.getProgress()+1)*3;
-                new Thread(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        mRenderer.DrawTo(showRange);
-                        mGLView.requestRender();
-                    }
-                }).start();
+                mRenderer.DrawTo(showRange);
+                mGLView.requestRender();
             }
 
             @Override
@@ -186,19 +183,53 @@ public class ChanMain extends Activity
         }).start();
     }
 
+    public void readDataInit(DataIOThread ioThread)
+    {
+        String data = ioThread.readSwing();
+
+        mRenderer.readButtonTapped(data);
+        showRange = mRenderer.getLineLength();
+        seekBar1.setMax((showRange - 1)/3 );
+        seekBar1.setProgress(seekBar1.getMax());
+    }
+
     @Override
     protected void onPause()
     {
         super.onPause();
         mGLView.onPause();
-        swingSave.setList(mRenderer.getVertexBuff());
     }
 
-    @Override
     protected void onResume()
     {
         super.onResume();
         mGLView.onResume();
-        mRenderer.setVertexBuff(swingSave.getList());
+    }
+
+    protected void onStop()
+    {
+        super.onStop();
+        mGLView.onPause();
+    }
+
+    protected void onStart()
+    {
+        super.onStart();
+        mGLView.onResume();
+    }
+
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode)
+        {
+            case 1:
+                String fileName = data.getStringExtra("file_name");
+
+                DataIOThread dataRead = new DataIOThread(fileName);
+                readDataInit(dataRead);
+            break;
+        }
     }
 }
