@@ -113,26 +113,19 @@ public class ChanMain extends Activity
         button4.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(View v)
-            {
-                if(isRun == STOPPED)
-                {
+            public void onClick(View v) {
+                if (isRun == STOPPED) {
                     button4.setText("Stop");
-                }
-                else if(isRun == RUNNING)
-                {
+                } else if (isRun == RUNNING) {
                     button4.setText("Start");
                 }
                 autoRun();
-                while(isRun == RUNNING)
-                {
-                    if(isRun == STOPPED)
-                    {
-                        button4.setText("Start");
-                        break;
-                    }
-                }
+
+                button4.setText("Start");
+                break;
+
             }
+
         });
 
         seekBar1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()           //SeekBar View
