@@ -64,6 +64,13 @@ public class ListStructureAdaptor extends BaseAdapter
             pathView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 24);
             layout.addView(pathView, params);
         }
+        else
+        {
+            TextView pathView = new TextView(mContext);
+            pathView.setText(" ");
+            pathView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 24);
+            layout.addView(pathView, params);
+        }
 
         return layout;
     }

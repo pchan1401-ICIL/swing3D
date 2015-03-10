@@ -54,15 +54,15 @@ public class MyGLSurfaceView extends GLSurfaceView
                     dy1 = event.getY() - mPreviousY1;
                     if (moveMode == ROTATE_BUTTON)
                     {
-                        XAngle = XAngle + dx1;
-                        YAngle = YAngle + dy1;
+                        XAngle = XAngle - dx1;
+                        YAngle = YAngle - dy1;
                         mRenderer.setXAngle(XAngle / getWidth() * 100);
                         mRenderer.setYAngle(YAngle / getHeight() * 100);
                     }
                     else if (moveMode == MOVE_BUTTON)
                     {
                         difx = difx + dx1;
-                        dify = dify + dy1;
+                        dify = dify - dy1;
                         mRenderer.setDx((difx) / getWidth());
                         mRenderer.setDy((dify) / getHeight());
                     }

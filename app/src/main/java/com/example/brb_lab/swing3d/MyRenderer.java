@@ -56,6 +56,8 @@ public class MyRenderer implements GLSurfaceView.Renderer
             readButtonTapped = NO_BUTTON;
         }
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+        gl.glEnable(GL10.GL_DEPTH_TEST);
+        gl.glDepthFunc(GL10.GL_LESS);
         gl.glLoadIdentity();
         gl.glTranslatef(mDx, mDy, mDz);
         gl.glLineWidth(5.0f);

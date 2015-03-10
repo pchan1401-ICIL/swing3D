@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -13,14 +14,13 @@ import android.widget.SeekBar;
 public class ChanMain extends Activity
 {
     private int showRange;
-    private int isDataRead = 1;
-    static int FROM_DATA_READ = 1;
-    static int NOT_FROM_DATA_READ = 0;
     private MyRenderer mRenderer;
     private MyGLSurfaceView mGLView;
-    private int findRng = 0;
+    private int isRun = 0;
+    static int RUNNING = 1;
+    static int STOPPED = 0;
+    private boolean breaker = false;
     Handler mHandler = new Handler();
-
 
     RadioButton radioButton1;
     RadioButton radioButton2;
@@ -45,7 +45,7 @@ public class ChanMain extends Activity
         seekBar1 = (SeekBar)findViewById(R.id.seekBar1);
         seekBar1.setMax(0);
 
-        radioButton1.setOnClickListener(new View.OnClickListener()
+        radioButton1.setOnClickListener(new View.OnClickListener()  //when Rotate model
         {
             @Override
             public void onClick(View v)
@@ -57,7 +57,7 @@ public class ChanMain extends Activity
             }
         });
 
-        radioButton2.setOnClickListener(new View.OnClickListener()
+        radioButton2.setOnClickListener(new View.OnClickListener()  //when Rotate model
         {
             @Override
             public void onClick(View v)
@@ -75,48 +75,72 @@ public class ChanMain extends Activity
             @Override
             public void onClick(View v)
             {
-                isDataRead = FROM_DATA_READ;
                 Intent mFileListView = new Intent(getApplicationContext(),FileListViewActivity.class);
                 startActivityForResult(mFileListView, 1);
             }
         });
 
-        Button button2 = (Button) findViewById(R.id.button2);
-        button2.setOnClickListener(new View.OnClickListener()
+        Button button2 = (Button) findViewById(R.id.button2);  //when Next Point
+        button2.setOnTouchListener(new View.OnTouchListener()
         {
             @Override
-            public void onClick(View v)
+            public boolean onTouch(View v, MotionEvent event)
             {
-                MoreLine();
+                switch(event.getAction())
+                {
+                    case MotionEvent.ACTION_MOVE:
+                        MoreLine();
+                        break;
+                }
+                return false;
             }
         });
 
-        Button button3 = (Button) findViewById(R.id.button3);
-        button3.setOnClickListener(new View.OnClickListener()
-        {
+        Button button3 = (Button) findViewById(R.id.button3);   //when Previous Point
+        button3.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v)
-            {
-                LessLine();
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_MOVE:
+                        LessLine();
+                        break;
+                }
+                return false;
             }
         });
 
-        Button button4 = (Button) findViewById(R.id.button4);
+        final Button button4 = (Button) findViewById(R.id.button4);   //when Automatically run or stop
         button4.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+                if(isRun == STOPPED)
+                {
+                    button4.setText("Stop");
+                }
+                else if(isRun == RUNNING)
+                {
+                    button4.setText("Start");
+                }
                 autoRun();
+                while(isRun == RUNNING)
+                {
+                    if(isRun == STOPPED)
+                    {
+                        button4.setText("Start");
+                        break;
+                    }
+                }
             }
         });
 
-        seekBar1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+        seekBar1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()           //SeekBar View
         {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
             {
-                showRange=(seekBar1.getProgress()+1)*3;
+                showRange=(seekBar1.getProgress()+1)*3;                 //change showRange to show how much show the line
                 mRenderer.DrawTo(showRange);
                 mGLView.requestRender();
             }
@@ -136,9 +160,8 @@ public class ChanMain extends Activity
     }
     protected void MoreLine()
     {
-        if(showRange < mRenderer.getLineLength() - 2)
-        {
-            seekBar1.setProgress(seekBar1.getProgress()+1);
+        if (showRange < mRenderer.getLineLength() - 2) {
+            seekBar1.setProgress(seekBar1.getProgress() + 1);
         }
     }
 
@@ -157,31 +180,49 @@ public class ChanMain extends Activity
             @Override
             public void run()
             {
-                seekBar1.setProgress(0);
-                while(seekBar1.getProgress() < seekBar1.getMax())
+                if(isRun == STOPPED)
                 {
-                    if(seekBar1.getMax() == 0)
-                    {
-                        break;
+                    isRun = RUNNING;
+                    seekBar1.setProgress(0);
+                    while (seekBar1.getProgress() < seekBar1.getMax()) {
+                        if (seekBar1.getMax() == 0 || breaker) {
+                            breakerOff();
+                            break;
+                        }
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        mHandler.post(new Runnable() {
+                            public void run() {
+                                seekBar1.setProgress(seekBar1.getProgress() + 1);
+                            }
+                        });
                     }
-                    try
-                    {
-                        Thread.sleep(100);
-                    }
-                    catch (InterruptedException e)
-                    {
-                        e.printStackTrace();
-                    }
-                    mHandler.post(new Runnable()
-                    {
-                        public void run()
-                        {
-                            seekBar1.setProgress(seekBar1.getProgress()+1);
+                    isRun = STOPPED;
+                }
+                else if(isRun == RUNNING)
+                {
+                    mHandler.post(new Runnable() {
+                        public void run() {
+                            breakerOn();
                         }
                     });
                 }
             }
         }).start();
+    }
+    public boolean breakerOn()
+    {
+        breaker = true;
+        return breaker;
+    }
+
+    public boolean breakerOff()
+    {
+        breaker = false;
+        return breaker;
     }
 
     public void readDataInit(DataIOThread ioThread)
