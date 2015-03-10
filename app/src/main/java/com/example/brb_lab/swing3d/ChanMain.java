@@ -43,6 +43,7 @@ public class ChanMain extends Activity
         radioButton1 = (RadioButton)findViewById(R.id.radioButton1);
         radioButton2 = (RadioButton)findViewById(R.id.radioButton2);
         seekBar1 = (SeekBar)findViewById(R.id.seekBar1);
+        seekBar1.setMax(0);
 
         radioButton1.setOnClickListener(new View.OnClickListener()
         {
@@ -157,7 +158,7 @@ public class ChanMain extends Activity
             public void run()
             {
                 seekBar1.setProgress(0);
-                while(findRng < seekBar1.getMax())
+                while(seekBar1.getProgress() < seekBar1.getMax())
                 {
                     if(seekBar1.getMax() == 0)
                     {

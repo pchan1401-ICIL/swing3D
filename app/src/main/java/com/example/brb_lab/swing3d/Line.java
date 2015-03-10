@@ -77,13 +77,13 @@ public class Line
 
         for (int i = 0; i < colors.length; i++)
         {
-            if ((i+1)%4 == 0 || (i+1)%5 == 0)
+            if ((i+1)%4 == 0)
             {
                 colors[i] = 1.0f;
             }
             else
             {
-                colors[i] = 0.0f;
+                colors[i] = 0.5f;
             }
         }
 

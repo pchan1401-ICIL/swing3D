@@ -16,6 +16,7 @@ public class MyRenderer implements GLSurfaceView.Renderer
 
     private Context mContext;
     private Line mLine;
+    private GroundGL mGround;
     private float yAngle;
     private float xAngle;
     private float mAngle;
@@ -32,7 +33,7 @@ public class MyRenderer implements GLSurfaceView.Renderer
     @Override
     public void onSurfaceCreated(GL10 gl, javax.microedition.khronos.egl.EGLConfig config)
     {
-        gl.glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+        gl.glClearColor(0 / 255.0f, 191.0f / 255.0f, 255.0f / 255.0f, 1.0f);
         vertexBuff = mLine.getVertexes();
     }
 
@@ -40,6 +41,7 @@ public class MyRenderer implements GLSurfaceView.Renderer
     {
         mContext = context;
         mLine = new Line();
+        mGround = new GroundGL();
     }
 
     public void onDrawFrame(GL10 gl)
@@ -69,6 +71,7 @@ public class MyRenderer implements GLSurfaceView.Renderer
             e.printStackTrace();
         }
 
+        mGround.draw(gl);
         mLine.draw(gl);
     }
 
