@@ -122,8 +122,6 @@ public class ChanMain extends Activity
                 autoRun();
 
                 button4.setText("Start");
-                break;
-
             }
 
         });
