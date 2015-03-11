@@ -114,14 +114,16 @@ public class ChanMain extends Activity
         {
             @Override
             public void onClick(View v) {
-                if (isRun == STOPPED) {
-                    button4.setText("Stop");
-                } else if (isRun == RUNNING) {
-                    button4.setText("Start");
+                if(seekBar1.getMax() != seekBar1.getProgress())
+                {
+                    if (isRun == STOPPED) {
+                        button4.setText("Stop");
+                    } else if (isRun == RUNNING) {
+                        button4.setText("Start");
+                    }
                 }
-                autoRun();
 
-                button4.setText("Start");
+                autoRun();
             }
 
         });
@@ -134,6 +136,10 @@ public class ChanMain extends Activity
                 showRange=(seekBar1.getProgress()+1)*3;                 //change showRange to show how much show the line
                 mRenderer.DrawTo(showRange);
                 mGLView.requestRender();
+                if(seekBar1.getProgress() == seekBar1.getMax())
+                {
+                    button4.setText("Start");
+                }
             }
 
             @Override
@@ -174,7 +180,6 @@ public class ChanMain extends Activity
                 if(isRun == STOPPED)
                 {
                     isRun = RUNNING;
-                    seekBar1.setProgress(0);
                     while (seekBar1.getProgress() < seekBar1.getMax()) {
                         if (seekBar1.getMax() == 0 || breaker) {
                             breakerOff();
@@ -258,10 +263,16 @@ public class ChanMain extends Activity
         switch (requestCode)
         {
             case 1:
-                String fileName = data.getStringExtra("file_name");
+                try {
+                    String fileName = data.getStringExtra("file_name");
 
-                DataIOThread dataRead = new DataIOThread(fileName);
-                readDataInit(dataRead);
+                    DataIOThread dataRead = new DataIOThread(fileName);
+                    readDataInit(dataRead);
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
             break;
         }
     }

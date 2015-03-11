@@ -21,7 +21,7 @@ public class MyRenderer implements GLSurfaceView.Renderer
     private float xAngle;
     private float mAngle;
     private float mDx;
-    private float mDy;
+    private float mDy = -0.5f;
     private float mDz;
     private float posX = 0.0f;
     private float posY = 0.0f;
