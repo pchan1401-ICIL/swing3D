@@ -2,14 +2,22 @@ package com.example.brb_lab.swing3d;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.MediaController;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
+import android.widget.VideoView;
+
+import java.io.File;
+
 public class ChanMain extends Activity
 {
     private int showRange;
@@ -25,11 +33,17 @@ public class ChanMain extends Activity
     RadioButton radioButton2;
     FrameLayout frameLayout1;
     SeekBar seekBar1;
-
+////////////////////////////////CHAO
+    private VideoView videoView;
+    private Button play;
+    private Button pause;
+    boolean do_pause = false;
+///////////////////////////////////////CHAO
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chan);
+
 
         mGLView = new MyGLSurfaceView(this);
         mRenderer = new MyRenderer(this);
@@ -43,7 +57,16 @@ public class ChanMain extends Activity
         radioButton2 = (RadioButton)findViewById(R.id.radioButton2);
         seekBar1 = (SeekBar)findViewById(R.id.seekBar1);
         seekBar1.setMax(0);
+/////////////////////////////////////////////////////////////CHAO
+        play = (Button) findViewById(R.id.play);
+        pause = (Button) findViewById(R.id.pause);
+        videoView = (VideoView) findViewById(R.id.videoView);
+        //editText.setInputType(InputType.TYPE_CLASS_NUMBER);//输入类型为数字
+        videoView.setMediaController(null);
 
+
+        initVideoPath();
+/////////////////////////////////////////////////////////////////CHAO
         radioButton1.setOnClickListener(new View.OnClickListener()  //when Rotate model
         {
             @Override
@@ -109,19 +132,19 @@ public class ChanMain extends Activity
         });
 
         final Button button4 = (Button) findViewById(R.id.button4);   //when Automatically run or stop
-        button4.setOnClickListener(new View.OnClickListener()
-        {
+        button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(seekBar1.getMax() != seekBar1.getProgress())
-                {
+                if (seekBar1.getMax() != seekBar1.getProgress()) {
                     if (isRun == STOPPED) {
+                        videoView.resume();
+                        videoView.start();
                         button4.setText("Stop");
                     } else if (isRun == RUNNING) {
+                        videoView.pause();
                         button4.setText("Start");
                     }
                 }
-
                 autoRun();
             }
 
@@ -139,6 +162,10 @@ public class ChanMain extends Activity
                 {
                     button4.setText("Start");
                 }
+                if(fromUser)
+                {
+                    videoView.seekTo(progress*100);
+                }
             }
 
             @Override
@@ -153,7 +180,35 @@ public class ChanMain extends Activity
 
             }
         });
+
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+
+                seekBar1.setMax(videoView.getDuration()/100);
+                seekBar1.postDelayed(onEverySecond, 100);
+            }
+        });
+
+
     }
+    private Runnable onEverySecond=new Runnable() {
+
+        @Override
+        public void run() {
+
+            if(seekBar1 != null) {
+                seekBar1.setProgress(videoView.getCurrentPosition()/100);
+            }
+
+            if(videoView.isPlaying()) {
+                seekBar1.postDelayed(onEverySecond, 100);
+            }
+
+        }
+    };
+
     protected void MoreLine()
     {
         if (showRange < mRenderer.getLineLength() - 2) {
@@ -191,7 +246,7 @@ public class ChanMain extends Activity
                         }
                         mHandler.post(new Runnable() {
                             public void run() {
-                                seekBar1.setProgress(seekBar1.getProgress() + 1);
+
                             }
                         });
                     }
@@ -275,4 +330,18 @@ public class ChanMain extends Activity
             break;
         }
     }
+    //////////////////////////////////////
+    private void initVideoPath(){
+        File file = new File(Environment.getExternalStorageDirectory(),"myvideo.mp4");
+        videoView.setVideoPath(file.getPath());
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        if (videoView != null){
+            videoView.suspend();
+        }
+    }
+    ////////////////////////////////////CHAO
 }
