@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
-
+///////////////ckfjfjaofofjofjapofj/////////////////
 public class ChanMain extends Activity
 {
     private int showRange;
