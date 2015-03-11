@@ -6,8 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class UpperActivity extends Activity
-{
+public class UpperActivity extends Activity {
     public Button.OnClickListener clickListener = new View.OnClickListener() {
         public void onClick(View v) {
             switch (v.getId()) {
@@ -32,13 +31,11 @@ public class UpperActivity extends Activity
         findViewById(R.id.button4).setOnClickListener(clickListener);
     }
 
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
     }
 
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
     }
 }
