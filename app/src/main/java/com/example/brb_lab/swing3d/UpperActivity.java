@@ -12,18 +12,20 @@ public class UpperActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upper);
+        findViewById(R.id.button1).setOnClickListener(clickListener);
 
-        Button button1 = (Button)findViewById(R.id.button1);
-        button1.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                Intent mChanYoung = new Intent(getApplicationContext(),ChanMain.class);
-                startActivity(mChanYoung);
-            }
-        });
     }
+
+    public Button.OnClickListener clickListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.button1://Save button
+                    Intent mChanYoung = new Intent(getApplicationContext(),ChanMain.class);
+                    startActivity(mChanYoung);
+
+            }
+        }
+    };
 
     public void onPause()
     {
