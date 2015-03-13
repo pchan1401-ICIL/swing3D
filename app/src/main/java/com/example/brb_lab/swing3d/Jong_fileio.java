@@ -23,7 +23,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Jong on 2015-03-11.
@@ -44,7 +46,7 @@ public class Jong_fileio extends Activity implements SensorEventListener {
     float[] magneticField = new float[3];
     //센서 설정
     private SensorManager mSensorManager;
-    private Sensor mSensor_Acc,mSensor_mag,mSensor_gyro;
+    private Sensor mSensor_Acc,mSensor_mag,mSensor_gyro,mSensor_test;
 
 
     EditText setuptime;
@@ -86,6 +88,7 @@ public class Jong_fileio extends Activity implements SensorEventListener {
         mSensor_Acc = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mSensor_gyro = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         mSensor_mag = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        mSensor_test = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         ////////////////////////timer///////////////////////////////
 
 
@@ -102,6 +105,9 @@ public class Jong_fileio extends Activity implements SensorEventListener {
 
                     ////////////파일 저장////////////////////////
                     startFlag=1;
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+                    String currentDateandTime=sdf.format(new Date());
+                    filename = currentDateandTime+"test.txt";
                     filename = "test.txt";
                     String dir = sdCardPath + "/jonghwi/";
                     File temp = new File(dir);
