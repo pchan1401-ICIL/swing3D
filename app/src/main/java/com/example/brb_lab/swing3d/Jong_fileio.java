@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -40,7 +41,7 @@ public class Jong_fileio extends Activity implements SensorEventListener {
     float[] rotationRate = new float[3];
     float[] magneticField = new float[3];
     EditText setuptime;
-    EditText sensorinfo;
+    TextView sensorinfo;
     String sdCardPath;
     String contents;
     StringBuffer strbuf;
@@ -146,7 +147,7 @@ public class Jong_fileio extends Activity implements SensorEventListener {
 
         /////////////////////////////////////////////////
         setuptime = (EditText) findViewById(R.id.setuptime);
-        sensorinfo = (EditText) findViewById(R.id.Sensordataeditview);
+        sensorinfo = (TextView) findViewById(R.id.Sensordataeditview);
         findViewById(R.id.Save).setOnClickListener(clickListener);
         findViewById(R.id.load).setOnClickListener(clickListener);
         findViewById(R.id.Loadr).setOnClickListener(clickListener);
