@@ -31,72 +31,28 @@ import java.util.Date;
  * Created by Jong on 2015-03-11.
  */
 public class Jong_fileio extends Activity implements SensorEventListener {
-    //thread 설정
-    private Handler mHandler;
-    private Runnable mRunnable;
-    private String filename;
+    final Calendar c = Calendar.getInstance();
+    public int startFlag = 0;
     FileOutputStream outstream;
     OutputStreamWriter writer;
-    public int startFlag=0;
-
-
     //센서 값 설정
     float[] acceleration = new float[3];
     float[] rotationRate = new float[3];
     float[] magneticField = new float[3];
-    //센서 설정
-    private SensorManager mSensorManager;
-    private Sensor mSensor_Acc,mSensor_mag,mSensor_gyro,mSensor_test;
-
-
     EditText setuptime;
     EditText sensorinfo;
     String sdCardPath;
     String contents;
     StringBuffer strbuf;
     int time=0;
-    final Calendar c = Calendar.getInstance();
     int nowSec=0;
     int periodsec=10;//기본 10초로 설정
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.jong_main);
-        /////////////time setup////////////////////////////
-
-        /////////////////////////////////////////////////
-        setuptime = (EditText) findViewById(R.id.setuptime);
-        sensorinfo =(EditText)findViewById(R.id.Sensordataeditview);
-        findViewById(R.id.Save).setOnClickListener(clickListener);
-        findViewById(R.id.load).setOnClickListener(clickListener);
-        findViewById(R.id.Loadr).setOnClickListener(clickListener);
-        findViewById(R.id.Delete).setOnClickListener(clickListener);
-        findViewById(R.id.stop).setOnClickListener(clickListener);
-
-        ////////////////////////////sd Card//////////////////////////////////////////////////
-        String ext= Environment.getExternalStorageState();
-        if(ext.equals(Environment.MEDIA_MOUNTED)){
-            sdCardPath=Environment.getExternalStorageDirectory().getAbsolutePath();
-        }else{
-            sdCardPath=Environment.MEDIA_UNMOUNTED;
-        }
-
-        ////////////////////////sensor setup.///////////////////////
-        mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
-        mSensor_Acc = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mSensor_gyro = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        mSensor_mag = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        mSensor_test = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-        ////////////////////////timer///////////////////////////////
-
-
-    }
-
-
-    public Button.OnClickListener clickListener = new View.OnClickListener(){
-        public void onClick(View v){
+    //thread 설정
+    private Handler mHandler;
+    private Runnable mRunnable;
+    private String filename;
+    public Button.OnClickListener clickListener = new View.OnClickListener() {
+        public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.Save://Save button
                     ///////////시작 시간 설정//////////////////
@@ -104,11 +60,10 @@ public class Jong_fileio extends Activity implements SensorEventListener {
                     ////////////handler//////////////////////////
 
                     ////////////파일 저장////////////////////////
-                    startFlag=1;
+                    startFlag = 1;
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-                    String currentDateandTime=sdf.format(new Date());
-                    filename = currentDateandTime+"test.txt";
-                    filename = "test.txt";
+                    String currentDateandTime = sdf.format(new Date());
+                    filename = currentDateandTime + "SensorData.txt";
                     String dir = sdCardPath + "/jonghwi/";
                     File temp = new File(dir);
                     if (!temp.exists()) {
@@ -131,44 +86,45 @@ public class Jong_fileio extends Activity implements SensorEventListener {
 */
 
 
-
                     ///////////////////////////////////////////////////////////////////////////
 
                     break;
                 case R.id.load://파일 읽기
-                    try{
+                    try {
                         FileInputStream fis = openFileInput("test.txt");
                         byte[] data = new byte[fis.available()];
-                        while (fis.read(data) != -1){}
+                        while (fis.read(data) != -1) {
+                        }
                         fis.close();
                         setuptime.setText(new String(data));
-                    }catch (FileNotFoundException fileNotFountError) {
+                    } catch (FileNotFoundException fileNotFountError) {
                         setuptime.setText("File Not Found");
-                    }catch(IOException ioe){
+                    } catch (IOException ioe) {
                         ioe.printStackTrace();
                     }
                     break;
                 case R.id.Loadr://리소스 파일 읽기
-                    try{
+                    try {
                         InputStream fres = getResources().openRawResource(R.raw.myfile);
-                        InputStreamReader reader = new InputStreamReader(fres,"UTF-8");
+                        InputStreamReader reader = new InputStreamReader(fres, "UTF-8");
                         char[] data = new char[fres.available()];
-                        while(reader.read(data) !=-1){}
+                        while (reader.read(data) != -1) {
+                        }
                         fres.close();
                         setuptime.setText(new String(data));
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     break;
                 case R.id.Delete://삭제
-                    if(deleteFile("test.txt")){
+                    if (deleteFile("test.txt")) {
                         setuptime.setText("성공적으로 삭제되었습니다. \n file Delete sucess");
-                    }else{
+                    } else {
                         setuptime.setText("파일 삭제 실패 하였습니다. \n Fail to Delete file");
                     }
                     break;
                 case R.id.stop:
-                    startFlag=0;
+                    startFlag = 0;
 
 
                     Toast.makeText(getApplicationContext(), "파일에 쓰기 성공", Toast.LENGTH_SHORT).show();
@@ -178,6 +134,44 @@ public class Jong_fileio extends Activity implements SensorEventListener {
             }
         }
     };
+    //센서 설정
+    private SensorManager mSensorManager;
+    private Sensor mSensor_Acc, mSensor_mag, mSensor_gyro, mSensor_test;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.jong_main);
+        /////////////time setup////////////////////////////
+
+        /////////////////////////////////////////////////
+        setuptime = (EditText) findViewById(R.id.setuptime);
+        sensorinfo = (EditText) findViewById(R.id.Sensordataeditview);
+        findViewById(R.id.Save).setOnClickListener(clickListener);
+        findViewById(R.id.load).setOnClickListener(clickListener);
+        findViewById(R.id.Loadr).setOnClickListener(clickListener);
+        findViewById(R.id.Delete).setOnClickListener(clickListener);
+        findViewById(R.id.stop).setOnClickListener(clickListener);
+
+        ////////////////////////////sd Card//////////////////////////////////////////////////
+        String ext = Environment.getExternalStorageState();
+        if (ext.equals(Environment.MEDIA_MOUNTED)) {
+            sdCardPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        } else {
+            sdCardPath = Environment.MEDIA_UNMOUNTED;
+        }
+
+        ////////////////////////sensor setup.///////////////////////
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mSensor_Acc = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mSensor_gyro = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        mSensor_mag = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        mSensor_test = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+        ////////////////////////timer///////////////////////////////
+
+
+    }
+
     ////////////////////////////파일쓰기 함수///////////////////////////////////////
     public void writeToFile(String filename) {
         File file = new File(filename);

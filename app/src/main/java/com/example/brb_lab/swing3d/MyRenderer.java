@@ -9,11 +9,11 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class MyRenderer implements GLSurfaceView.Renderer
 {
-    private int inputButtonTapped = 0;
-    private int readButtonTapped = 0;
     static int NO_BUTTON = 0;
     static int BUTTON_TAPPED = 1;
-
+    ArrayList<Float> vertexBuff = new ArrayList<Float>();       //Save total Vertex
+    private int inputButtonTapped = 0;
+    private int readButtonTapped = 0;
     private Context mContext;
     private Line mLine;
     private GroundGL mGround;
@@ -28,20 +28,18 @@ public class MyRenderer implements GLSurfaceView.Renderer
     private float posZ = 0.0f;
     private float sizeCoef = 1.0f;
 
-    ArrayList<Float> vertexBuff = new  ArrayList<Float>();       //Save total Vertex
+    public MyRenderer(Context context)
+    {
+        mContext = context;
+        mLine = new Line();
+        mGround = new GroundGL();
+    }
 
     @Override
     public void onSurfaceCreated(GL10 gl, javax.microedition.khronos.egl.EGLConfig config)
     {
         gl.glClearColor(0 / 255.0f, 191.0f / 255.0f, 255.0f / 255.0f, 1.0f);
         vertexBuff = mLine.getVertexes();
-    }
-
-    public MyRenderer(Context context)
-    {
-        mContext = context;
-        mLine = new Line();
-        mGround = new GroundGL();
     }
 
     public void onDrawFrame(GL10 gl)
@@ -64,6 +62,8 @@ public class MyRenderer implements GLSurfaceView.Renderer
         gl.glRotatef(xAngle, 0.0f, 1.0f, 0.0f);
         gl.glRotatef(yAngle, 1.0f, 0.0f, 0.0f);
         gl.glScalef(sizeCoef, sizeCoef, sizeCoef);
+
+
         try
         {
             mLine.listToArray();
@@ -133,46 +133,55 @@ public class MyRenderer implements GLSurfaceView.Renderer
     {
         mLine.insertVertex(x,y,z);
     }
-    public void setYAngle(float Y)
-    {
-        yAngle = Y;
-    }
-    public void setXAngle(float X)
-    {
-        xAngle = X;
-    }
-    public void setAngle(float f)
-    {
-        mAngle = f;
-    }
+
     public float getXAngle()
     {
         return xAngle;
     }
-    public float getYAngle()
+
+    public void setXAngle(float X)
     {
+        xAngle = X;
+    }
+
+    public float getYAngle() {
         return yAngle;
     }
+
+    public void setYAngle(float Y)
+    {
+        yAngle = Y;
+    }
+
     public float getAngle()
     {
         return mAngle;
     }
+
+    public void setAngle(float f)
+    {
+        mAngle = f;
+    }
+
+    public float getDx() {
+        return mDx;
+    }
+
     public void setDx(float dx)
     {
         mDx = dx;
     }
-    public void setDy(float dy)
-    {
-        mDy = dy;
-    }
-    public float getDx()
-    {
-        return mDx;
-    }
+
     public float getDy()
     {
         return mDy;
     }
+
+    public void setDy(float dy)
+    {
+        mDy = dy;
+    }
+
     public void scaleing(float size)
     {
         sizeCoef = size;
