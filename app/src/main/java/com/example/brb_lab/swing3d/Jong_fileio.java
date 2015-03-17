@@ -137,7 +137,7 @@ public class Jong_fileio extends Activity implements SensorEventListener {
     };
     //센서 설정
     private SensorManager mSensorManager;
-    private Sensor mSensor_Acc, mSensor_mag, mSensor_gyro, mSensor_test;
+    private Sensor mSensor_Acc, mSensor_mag, mSensor_gyro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,7 +167,6 @@ public class Jong_fileio extends Activity implements SensorEventListener {
         mSensor_Acc = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mSensor_gyro = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         mSensor_mag = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        mSensor_test = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         ////////////////////////timer///////////////////////////////
 
 
@@ -235,10 +234,12 @@ public class Jong_fileio extends Activity implements SensorEventListener {
             magneticField[2] = event.values[2];
         }
 
-        Calendar calendar = Calendar.getInstance();
-        String date = calendar.getTime().toString();
+        //Calendar calendar = Calendar.getInstance();
+        //String date = calendar.getTime().toString();
         strbuf = new StringBuffer();
-        strbuf.append(date+"\n");
+        //strbuf.append(date+"\n");
+        String str = String.format("%1$tY.%1$tm.%1$td %1$tH:%1$tM:%1$tS.%1$tL", new Date().getTime());
+        strbuf.append(str+"\n");
         strbuf.append(acceleration[0] + "\n");
         strbuf.append(acceleration[1] + "\n");
         strbuf.append(acceleration[2] + "\n");
@@ -248,8 +249,8 @@ public class Jong_fileio extends Activity implements SensorEventListener {
         strbuf.append(magneticField[0] + "\n");
         strbuf.append(magneticField[1] + "\n");
         strbuf.append(magneticField[2] + "\n\n");
-        sensorinfo.setText(strbuf.toString());
 
+        sensorinfo.setText(strbuf.toString());
         //////////////////////save//////////////////////////
         if(startFlag==1) {
 
