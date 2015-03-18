@@ -44,6 +44,7 @@ public class ChanMain extends Activity {
         mGLView = new MyGLSurfaceView(this);
         mRenderer = new MyRenderer(this);
         frameLayout1 = (FrameLayout) findViewById(R.id.FrameLayout1);
+
         mGLView.setRenderer(mRenderer);
         mGLView.setRenderMode(MyGLSurfaceView.RENDERMODE_WHEN_DIRTY);
         mGLView.setPreserveEGLContextOnPause(true);
@@ -53,13 +54,11 @@ public class ChanMain extends Activity {
         radioButton2 = (RadioButton) findViewById(R.id.radioButton2);
         seekBar1 = (SeekBar) findViewById(R.id.seekBar1);
         seekBar1.setMax(0);
+
 /////////////////////////////////////////////////////////////CHAO
-        play = (Button) findViewById(R.id.play);
-        pause = (Button) findViewById(R.id.pause);
         videoView = (VideoView) findViewById(R.id.videoView);
         //editText.setInputType(InputType.TYPE_CLASS_NUMBER);//输入类型为数字
         videoView.setMediaController(null);
-
 
         initVideoPath();
 /////////////////////////////////////////////////////////////////CHAO
@@ -203,6 +202,12 @@ public class ChanMain extends Activity {
         seekBar1.setProgress(seekBar1.getMax());
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mGLView.onPause();
+    }
+
     private Runnable onEverySecond = new Runnable() {
 
         @Override
@@ -218,12 +223,6 @@ public class ChanMain extends Activity {
 
         }
     };
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mGLView.onPause();
-    }
 
     protected void onResume() {
         super.onResume();

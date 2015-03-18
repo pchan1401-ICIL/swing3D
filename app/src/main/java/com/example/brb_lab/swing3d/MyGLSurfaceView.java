@@ -3,6 +3,7 @@ package com.example.brb_lab.swing3d;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.util.FloatMath;
 import android.view.MotionEvent;
@@ -31,6 +32,10 @@ public class MyGLSurfaceView extends GLSurfaceView
     public MyGLSurfaceView(Context context)
     {
         super(context);
+        setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+        getHolder().setFormat(PixelFormat.TRANSLUCENT);
+        setBackgroundResource(R.drawable.golf);
+        setZOrderOnTop(true);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -97,13 +102,13 @@ public class MyGLSurfaceView extends GLSurfaceView
         mRenderer = (MyRenderer)renderer;
     }
 
+    public int getMoveMode() {
+        return moveMode;
+    }
+
     public void setMoveMode(int mode)
     {
         moveMode = mode;
-    }
-    public int getMoveMode()
-    {
-        return moveMode;
     }
 
 

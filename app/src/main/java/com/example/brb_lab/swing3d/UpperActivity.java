@@ -18,7 +18,6 @@ public class UpperActivity extends Activity {
                     Intent mJongHwi = new Intent(getApplicationContext(), Jong_fileio.class);
                     startActivity(mJongHwi);
                     break;
-
             }
         }
     };
