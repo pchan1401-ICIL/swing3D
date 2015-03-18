@@ -240,15 +240,15 @@ public class Jong_fileio extends Activity implements SensorEventListener {
         //strbuf.append(date+"\n");
         String str = String.format("%1$tY.%1$tm.%1$td %1$tH:%1$tM:%1$tS.%1$tL", new Date().getTime());
         strbuf.append(str+"\n");
-        strbuf.append(acceleration[0] + "\n");
-        strbuf.append(acceleration[1] + "\n");
-        strbuf.append(acceleration[2] + "\n");
-        strbuf.append(rotationRate[0] + "\n");
-        strbuf.append(rotationRate[1] + "\n");
-        strbuf.append(rotationRate[2] + "\n");
-        strbuf.append(magneticField[0] + "\n");
-        strbuf.append(magneticField[1] + "\n");
-        strbuf.append(magneticField[2] + "\n\n");
+        strbuf.append("A"+acceleration[0] + "\n");
+        strbuf.append("A"+acceleration[1] + "\n");
+        strbuf.append("A"+acceleration[2] + "\n");
+        strbuf.append("R"+rotationRate[0] + "\n");
+        strbuf.append("R"+rotationRate[1] + "\n");
+        strbuf.append("R"+rotationRate[2] + "\n");
+        strbuf.append("M"+magneticField[0] + "\n");
+        strbuf.append("M"+magneticField[1] + "\n");
+        strbuf.append("M"+magneticField[2] + "\n\n");
 
         sensorinfo.setText(strbuf.toString());
         //////////////////////save//////////////////////////
