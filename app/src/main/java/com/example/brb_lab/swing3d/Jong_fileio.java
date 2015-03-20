@@ -33,6 +33,8 @@ import java.util.Date;
  */
 public class Jong_fileio extends Activity implements SensorEventListener {
     final Calendar c = Calendar.getInstance();
+    long starttime;
+    long currentTime;
     public int startFlag = 0;
     FileOutputStream outstream;
     OutputStreamWriter writer;
@@ -56,6 +58,7 @@ public class Jong_fileio extends Activity implements SensorEventListener {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.Save://Save button
+                    starttime = new Date().getTime();
                     ///////////시작 시간 설정//////////////////
                     nowSec = c.get(Calendar.SECOND);
                     ////////////handler//////////////////////////
@@ -180,6 +183,7 @@ public class Jong_fileio extends Activity implements SensorEventListener {
             writer = new OutputStreamWriter(outstream);
             //    contents=sensorinfo.getText().toString();
             contents=strbuf.toString();
+            writer.write(String.valueOf((currentTime-starttime)));
 
             writer.write(contents);
             writer.flush();
@@ -238,9 +242,11 @@ public class Jong_fileio extends Activity implements SensorEventListener {
         //String date = calendar.getTime().toString();
         strbuf = new StringBuffer();
         //strbuf.append(date+"\n");
-        String str = String.format("%1$tY.%1$tm.%1$td %1$tH:%1$tM:%1$tS.%1$tL", new Date().getTime());
-        strbuf.append(str+"\n");
-        strbuf.append("A"+acceleration[0] + "\n");
+        //String str = String.format("%1$tY.%1$tm.%1$td %1$tH:%1$tM:%1$tS.%1$tL", new Date().getTime());
+        //currentTime = String.format("%1$tH:%1$tM:%1$tS.%1$tL", new Date().getTime());
+        currentTime = new Date().getTime();
+        //strbuf.append(currentTime+"\n");
+        strbuf.append("\n"+"A"+acceleration[0] + "\n");
         strbuf.append("A"+acceleration[1] + "\n");
         strbuf.append("A"+acceleration[2] + "\n");
         strbuf.append("R"+rotationRate[0] + "\n");
@@ -250,9 +256,12 @@ public class Jong_fileio extends Activity implements SensorEventListener {
         strbuf.append("M"+magneticField[1] + "\n");
         strbuf.append("M"+magneticField[2] + "\n\n");
 
+
+
         sensorinfo.setText(strbuf.toString());
         //////////////////////save//////////////////////////
         if(startFlag==1) {
+
 
 
             writeToFile(filename);
