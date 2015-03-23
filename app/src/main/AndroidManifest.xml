@@ -21,6 +21,7 @@
             android:screenOrientation="landscape"></activity>
         <activity android:name=".FileListViewActivity"></activity>
         <activity android:name=".Jong_fileio"></activity>
+        <activity android:name=".ChaoMain"></activity>
     </application>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
