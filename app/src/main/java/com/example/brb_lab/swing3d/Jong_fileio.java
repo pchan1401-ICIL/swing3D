@@ -183,7 +183,7 @@ public class Jong_fileio extends Activity implements SensorEventListener {
             writer = new OutputStreamWriter(outstream);
             //    contents=sensorinfo.getText().toString();
             contents=strbuf.toString();
-            writer.write(String.valueOf((currentTime-starttime)));
+            writer.write("T"+String.valueOf((currentTime-starttime)));
 
             writer.write(contents);
             writer.flush();
