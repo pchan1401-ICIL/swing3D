@@ -15,8 +15,7 @@ public class UpperActivity extends Activity {
                     startActivity(mChanYoung);
                     break;
                 case R.id.button2://jonghwi
-                    Intent mChao = new Intent(getApplicationContext(), ChaoMain.class);
-                    startActivity(mChao);
+
                     break;
                 case R.id.button4://jonghwi
                     Intent mJongHwi = new Intent(getApplicationContext(), Jong_fileio.class);
